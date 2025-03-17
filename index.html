@@ -7,7 +7,7 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
         button { font-size: 20px; padding: 10px; margin: 10px; cursor: pointer; }
-        #status { margin-top: 20px; font-weight: bold; }
+        #status, #contador { margin-top: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -15,9 +15,10 @@
     <button onclick="iniciar()">Iniciar Votación</button>
     <button onclick="detener()">Detener Votación</button>
     <p id="status">Estado: Inactivo</p>
+    <p id="contador">Votos realizados: 0</p>
 
     <script>
-        const server_url = "https://fb-vote-production.up.railway.app/"; // Reemplázalo con la URL real de tu Flask en la nube
+        const server_url = "https://fb-vote-production.up.railway.app"; // URL de tu Flask en la nube
 
         async function iniciar() {
             const response = await fetch(server_url + "/start");
@@ -30,6 +31,15 @@
             const data = await response.json();
             document.getElementById("status").innerText = "Estado: " + data.status;
         }
+
+        async function actualizarContador() {
+            const response = await fetch(server_url + "/count");
+            const data = await response.json();
+            document.getElementById("contador").innerText = "Votos realizados: " + data.count;
+        }
+
+        // Actualiza el contador cada 5 segundos
+        setInterval(actualizarContador, 5000);
     </script>
 </body>
 </html>
