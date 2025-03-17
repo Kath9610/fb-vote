@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatización de Votación</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        button { font-size: 20px; padding: 10px; margin: 10px; cursor: pointer; }
+        #status { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Control de Votación</h1>
+    <button onclick="iniciar()">Iniciar Votación</button>
+    <button onclick="detener()">Detener Votación</button>
+    <p id="status">Estado: Inactivo</p>
+
+    <script>
+        const server_url = "https://tu-servidor.com"; // Reemplázalo con la URL real de tu Flask en la nube
+
+        async function iniciar() {
+            const response = await fetch(server_url + "/start");
+            const data = await response.json();
+            document.getElementById("status").innerText = "Estado: " + data.status;
+        }
+
+        async function detener() {
+            const response = await fetch(server_url + "/stop");
+            const data = await response.json();
+            document.getElementById("status").innerText = "Estado: " + data.status;
+        }
+    </script>
+</body>
+</html>
