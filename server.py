@@ -1,15 +1,11 @@
-from flask import Flask, jsonify
-import threading
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
-def ejecutar_script():
-    print("Ejecutando script en el servidor...")
-
-@app.route('/ejecutar', methods=['GET'])
-def ejecutar():
-    threading.Thread(target=ejecutar_script).start()
-    return jsonify({"mensaje": "Script iniciado"}), 200
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
