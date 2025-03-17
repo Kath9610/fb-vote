@@ -10,12 +10,13 @@ from selenium.webdriver.support import expected_conditions as EC
 
 app = Flask(__name__)
 
-# Variable de control
+# Variables globales
 ejecutando = False
+contador_votos = 0  # Contador de votos
 
 def ejecutar_script():
     """Ejecuta el script de votación en un bucle."""
-    global ejecutando
+    global ejecutando, contador_votos
     ejecutando = True
 
     while ejecutando:
@@ -28,7 +29,7 @@ def ejecutar_script():
         chrome_options.add_argument("--blink-settings=imagesEnabled=false")
         chrome_options.add_argument("--start-maximized")
 
-        service = Service('/usr/bin/chromedriver')  # Ruta correcta en Railway
+        service = Service('/usr/bin/chromedriver')  # Ruta en Railway
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
         try:
@@ -56,6 +57,9 @@ def ejecutar_script():
             driver.execute_script("arguments[0].scrollIntoView();", vote_button)
             vote_button.click()
             print("✔ Voto enviado.")
+
+            # Incrementamos el contador
+            contador_votos += 1
 
             time.sleep(5)
 
@@ -90,8 +94,14 @@ def stop():
     ejecutando = False
     return jsonify({"status": "Detenido"}), 200
 
+@app.route("/count", methods=["GET"])
+def count():
+    """Devuelve el número de votos realizados."""
+    return jsonify({"count": contador_votos})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
 
 
