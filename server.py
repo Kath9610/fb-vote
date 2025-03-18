@@ -7,6 +7,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import tempfile
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument(f"--user-data-dir={tempfile.mkdtemp()}")
 
 app = Flask(__name__)
 
@@ -21,15 +25,20 @@ def ejecutar_script():
 
     while ejecutando:
         print("Ejecutando script...")
-
         chrome_options = Options()
         chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--disable-extensions")
         chrome_options.add_argument("--blink-settings=imagesEnabled=false")
         chrome_options.add_argument("--start-maximized")
-
+        
+        # 🔥 SOLUCIÓN: Asigna un directorio único para cada sesión de Chrome
+        chrome_options.add_argument(f"--user-data-dir={tempfile.mkdtemp()}")
+        
+        # Configura el servicio con la ruta de ChromeDriver
         service = Service('/usr/bin/chromedriver')  # Ruta en Railway
+        
+        # Instancia el driver con las opciones corregidas
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
         try:
